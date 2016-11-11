@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace GettingReal {
@@ -8,15 +10,18 @@ namespace GettingReal {
         public void CustomerHaveAName() {
             Customer customer = new Customer();
             customer.Name = "Jens";
-
             Assert.AreEqual("Jens", customer.Name);
         }
         [TestMethod]
-        public void ACustomerCanChooseATime() {
+        public void ACustomerCanChooseATime()
+        {
             Customer customer = new Customer();
-            customer.Booktime(2016, 12, 24, 12, 00, 00); //hint DateTime      and       ToString("d/M/yyyy HH:mm")
+            customer.Times = new List<Time>();
 
-            Assert.AreEqual("24-12-2016 12:00", customer.Time);
+            customer.BookATime("12", "12", "2016", "12", "00");
+            
+            Assert.AreEqual("12/12/2016 12:00", customer.Times[0].ToString());
+            
         }
     }
 }
