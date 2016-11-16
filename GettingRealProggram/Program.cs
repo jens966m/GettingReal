@@ -11,7 +11,7 @@ namespace GettingRealProggram {
     {
         UserFunctions userFunctions;
         static void Main(string[] args) {
-                Program myProgram = new Program();
+            Program myProgram = new Program();
             myProgram.Run();
         }
 
@@ -21,21 +21,46 @@ namespace GettingRealProggram {
             userFunctions.Init();
             SwitchMenu();
         }
-        public void SwitchMenu() { 
+        public void SwitchMenu() {
 
-            Console.WriteLine("Tryk '1' for opret ny bruger eller tryk 2 for booking af tid");
+            Console.WriteLine("MENU:");
+            Console.WriteLine("Tryk '1' for opret ny bruger");
+            Console.WriteLine("tryk '2' for booking af tid");
+            Console.WriteLine("tryk '3' for list of customers");
             ConsoleKeyInfo cki;
+            ConsoleKeyInfo cki2;
             do
             {
                 cki = Console.ReadKey(false);
-                
+
                 switch (cki.KeyChar.ToString()) {
                     case "1":
                         userFunctions.RegisterUser();
+                        SwitchMenu();
                         break;
 
                     case "2":
-                        userFunctions.DoesUserExist();
+                        Customer currentCustomer = userFunctions.DoesUserExist();
+                        Console.Clear();
+                        Console.WriteLine("Hej " + currentCustomer.Name);
+                        Console.WriteLine("Tryk '1' hvis du ønsker at oprette en ny tid");
+                        Console.WriteLine("Tryk '2' hvis du ønsker at se liste over dine tider");
+                        cki2 = Console.ReadKey(false);
+                        switch (cki2.KeyChar.ToString()) {
+                            case "1":
+                                userFunctions.ChooseDate(currentCustomer);
+                                break;
+                            case "2":
+                                currentCustomer.ShowTimes();
+                                break;
+                        }
+                    
+                        SwitchMenu();
+                        break;
+
+                    case "3":
+                        userFunctions.ListCustomers();
+                        SwitchMenu();
                         break;
 
                     default:
@@ -43,7 +68,7 @@ namespace GettingRealProggram {
                         Console.Clear();
                         Console.WriteLine("Forkert input");
                         Console.WriteLine();
-                        Console.WriteLine("Tryk '1' for opret ny bruger eller tryk 2 for booking af tid");
+                        SwitchMenu();
                         break;
                 }
                 

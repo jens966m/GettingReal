@@ -7,7 +7,7 @@ namespace GettingRealProggram {
     public class UserFunctions
     { 
         public List<Customer> customers;
-        Customer customer = new Customer();
+        Customer customer;
         
         public void Init() {
                 customers = new List<Customer>();
@@ -15,44 +15,83 @@ namespace GettingRealProggram {
 
         public void RegisterUser()
         {
-            Console.WriteLine();
-            Console.WriteLine("Navn på bruger");
+            Console.Clear();
+            Console.WriteLine("Fornavn på bruger");
+            customer = new Customer();
             do {
+                //if (Console.ReadKey(true).Key == ConsoleKey.Escape) {
+                //    Console.Clear();
+                //    customer = null;
+                //    return;
+                //}
                 customer.Name = Console.ReadLine();  
                 Console.Clear();
-                Console.WriteLine("Navn på bruger, må ikke indholde tal eller være blankt");
+                Console.WriteLine("Fornavn på bruger, må ikke indholde tal eller være blankt");
                 if (customer.Name == "exit") {
                     Console.Clear();
-                    Console.WriteLine("Tryk '1' for opret ny bruger eller tryk 2 for booking af tid");
+                    customer = null;
                     return;
                 }
             } while (customer.Name == "" || customer.Name.Any(char.IsDigit));
 
             Console.Clear();
-            Console.WriteLine("Bruger " + customer.Name + " oprettet");
-            Console.WriteLine();
-            Console.WriteLine("Tryk '1' for opret ny bruger eller tryk 2 for booking af tid");
-            customers.Add(customer);
-           
-
-        }
-
-        public void DoesUserExist() {
-            Customer currentCustomer = null;
-            while (currentCustomer == null) {
-                Console.WriteLine();
-                Console.WriteLine("Indtast navn på din eksisterende bruger");
-                string currentCustomerName = Console.ReadLine();
-
-                if (currentCustomerName == "exit")
-                {
+            Console.WriteLine("Efternavn på bruger");
+            do {
+                customer.LastName = Console.ReadLine();
+                Console.Clear();
+                Console.WriteLine("Efternavn på bruger, må ikke indholde tal eller være blankt");
+                if (customer.LastName == "exit") {
                     Console.Clear();
-                    Console.WriteLine("Tryk '1' for opret ny bruger eller tryk 2 for booking af tid");
-                    return; 
+                    customer = null;
+                    return;
                 }
 
-                currentCustomer = customers.Find(x => x.Name == currentCustomerName);
+            } while (customer.LastName == "" || customer.LastName.Any(char.IsDigit));
+            Console.Clear();
+            Console.WriteLine("Telefonnummer på bruger");
+            string tempPhoneString;
+            int tempPhone = 0;
+            bool canConvert;
+            while(true) {
+                tempPhoneString = Console.ReadLine();
+
+                Console.Clear();
+                Console.WriteLine("Telefonnummer skal indeholde 8 tal");
+                if (tempPhoneString == "exit") {
+                    Console.Clear();
+                    customer = null;
+                    return;
+                }
+
+                canConvert = int.TryParse(tempPhoneString, out tempPhone);
+                if (tempPhoneString.Length == 8) {
+                    if (canConvert == true) {
+                        break;
+                    }
+                }
             }
+            customer.Phone = tempPhone;
+
+            Console.Clear();
+            Console.WriteLine("Bruger oprettet: ");
+            Console.WriteLine("Navn: " + customer.Name + " " + customer.LastName + " - tlf: " + customer.Phone);
+            Console.WriteLine();
+            customers.Add(customer);
+        }
+
+        public Customer DoesUserExist() {
+            Customer currentCustomer = null;
+            while (currentCustomer == null) {
+                Console.Clear();
+                Console.WriteLine("Indtast fornavn og efternavn på din eksisterende bruger");
+
+                string currentCustomerName = Console.ReadLine();
+                currentCustomer = customers.Find(x => x.Name + " " + x.LastName == currentCustomerName);
+            }
+            return currentCustomer;
+        }
+
+        public void ChooseDate(Customer thisCustomer) {
             Console.Clear();
             Console.WriteLine("Hvornår vil du klippes");
             Console.WriteLine("Hvilket år");
@@ -72,16 +111,23 @@ namespace GettingRealProggram {
             Console.Write(':');
             string minute = Console.ReadLine();
             Console.Clear();
+            thisCustomer.BookATime(day, month, year, hour, minute);
 
-
-
-            currentCustomer.BookATime(day, month, year, hour, minute);
-            string timeString = currentCustomer.Times[0].ToString();
-
+            //show booked date
+            int lastTime = thisCustomer.Times.Count() - 1;
+            string timeString = thisCustomer.Times[lastTime].ToString();
             Console.WriteLine("Du har booket en tid den:");
             Console.WriteLine(timeString);
             Console.WriteLine();
-            Console.WriteLine("Tryk '1' for opret ny bruger eller tryk 2 for booking af tid");
+        }
+
+        public void ListCustomers() {
+            Console.Clear();
+            Console.WriteLine("List of cusomers:");
+            for (int i = 0; i < customers.Count; i++) {
+                Console.WriteLine(i+1 + ": " + customers[i].Name + " " + customers[i].LastName + " - tlf: " + customers[i].Phone);
+            }
+            Console.WriteLine();                  
         }
     }
 }

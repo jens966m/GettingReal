@@ -10,7 +10,12 @@ namespace GettingReal {
         public void CustomerHaveAName() {
             Customer customer = new Customer();
             customer.Name = "Jens";
+            customer.LastName = "Dideriksen";
+            customer.Phone = 88888888;
+
             Assert.AreEqual("Jens", customer.Name);
+            Assert.AreEqual("Dideriksen", customer.LastName);
+            Assert.AreEqual(88888888, customer.Phone);
         }
         [TestMethod]
         public void ACustomerCanChooseATime()
