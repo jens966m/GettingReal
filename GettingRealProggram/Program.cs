@@ -7,72 +7,93 @@ using System.Threading.Tasks;
 using GettingReal;
 
 namespace GettingRealProggram {
-    class Program
-    {
+    class Program {
         UserFunctions userFunctions;
         static void Main(string[] args) {
             Program myProgram = new Program();
             myProgram.Run();
         }
 
-        public void Run()
-        {
+        public void Run() {
             userFunctions = new UserFunctions();
             userFunctions.Init();
-            SwitchMenu();
+            MainMenu();
         }
-        public void SwitchMenu() {
+        public void MainMenu() {
 
             Console.WriteLine("MENU:");
             Console.WriteLine("Tryk '1' for opret ny bruger");
-            Console.WriteLine("tryk '2' for booking af tid");
-            Console.WriteLine("tryk '3' for list of customers");
+            Console.WriteLine("tryk '2' for specifik bruger funktioner");
+            Console.WriteLine("tryk '3' for liste over brugere (kun for frisør)");
             ConsoleKeyInfo cki;
-            ConsoleKeyInfo cki2;
-            do
-            {
+            do {
                 cki = Console.ReadKey(false);
 
                 switch (cki.KeyChar.ToString()) {
                     case "1":
-                        userFunctions.RegisterUser();
-                        SwitchMenu();
-                        break;
+                    userFunctions.RegisterUser();
+                    MainMenu();
+                    break;
 
                     case "2":
-                        Customer currentCustomer = userFunctions.DoesUserExist();
-                        Console.Clear();
-                        Console.WriteLine("Hej " + currentCustomer.Name);
-                        Console.WriteLine("Tryk '1' hvis du ønsker at oprette en ny tid");
-                        Console.WriteLine("Tryk '2' hvis du ønsker at se liste over dine tider");
-                        cki2 = Console.ReadKey(false);
-                        switch (cki2.KeyChar.ToString()) {
-                            case "1":
-                                userFunctions.ChooseDate(currentCustomer);
-                                break;
-                            case "2":
-                                currentCustomer.ShowTimes();
-                                break;
-                        }
-                    
-                        SwitchMenu();
-                        break;
+                    UserMenu();
+                    MainMenu();
+                    break;
 
                     case "3":
-                        userFunctions.ListCustomers();
-                        SwitchMenu();
-                        break;
+                    userFunctions.ListCustomers();
+                    MainMenu();
+                    break;
 
+                    default:
+                    Console.WriteLine();
+                    Console.Clear();
+                    Console.WriteLine("Forkert input");
+                    Console.WriteLine();
+                    MainMenu();
+                    break;
+                }
+
+            } while (cki.Key != ConsoleKey.Escape);
+        }
+        public void UserMenu() {
+            ConsoleKeyInfo cki2;
+            Customer currentCustomer;
+            currentCustomer = userFunctions.DoesUserExist();
+            Console.Clear();
+            do {
+                Console.WriteLine("Du er logget på som: " + currentCustomer.Name + ' ' + currentCustomer.LastName);
+                Console.WriteLine("Tryk '1' hvis du ønsker at oprette en ny tid");
+                Console.WriteLine("Tryk '2' hvis du ønsker at se liste over dine tider");
+                Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden");
+                Console.WriteLine("Tryk '4' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+                cki2 = Console.ReadKey(false);
+                switch (cki2.KeyChar.ToString()) {
+                    case "1":
+                        Console.Clear();
+                        userFunctions.ChooseDate(currentCustomer);
+                        break;
+                    case "2":
+                        Console.Clear();
+                        currentCustomer.ShowTimes();
+                        break;
+                    case "3":
+                        Console.Clear();
+                        UserMenu();
+                        break;
+                    case "4":
+                        Console.Clear();
+                        MainMenu();
+                        break;
                     default:
                         Console.WriteLine();
                         Console.Clear();
                         Console.WriteLine("Forkert input");
                         Console.WriteLine();
-                        SwitchMenu();
+                        MainMenu();
                         break;
                 }
-                
-            } while (cki.Key != ConsoleKey.Escape);
+            } while (currentCustomer != null);
         }
     }
 }
