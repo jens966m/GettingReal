@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestGettingReal", "GettingReal\UnitTestGettingReal.csproj", "{D1B37B2E-0AE7-498E-B723-748D887AE2CB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTestGettingReal", "UnitTestGettingReal\UnitTestGettingReal.csproj", "{D1B37B2E-0AE7-498E-B723-748D887AE2CB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettingRealUI", "GettingRealProggram\GettingRealUI.csproj", "{3E4A3D1E-754D-45B9-A83D-F1EF34D85803}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GettingRealUI", "GettingRealUI\GettingRealUI.csproj", "{3E4A3D1E-754D-45B9-A83D-F1EF34D85803}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SourceCodeGettingReal", "SourceCodeGettingReal\SourceCodeGettingReal.csproj", "{D9FFC984-AE8D-41AF-9546-9AD814057176}"
 EndProject
