@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace GettingReal {
+namespace UnitTestGettingReal {
     public class Customer {
         public string Name { get; set; }
         public string LastName { get; set; }

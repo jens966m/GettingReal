@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GettingReal {
+namespace UnitTestGettingReal {
     [TestClass]
     public class Test {
         [TestMethod]
@@ -30,9 +30,11 @@ namespace GettingReal {
         }
         [TestMethod]
         public void AddCustomerToList() {
-            Customer person2 = new Customer(11111111);
+            Customer person2 = new Customer();
             person2.Name = "Peter";
-            .customers.Add(person2);
+            person2.Phone = 11111111;
+            
+            customers.Add(person2);
 
             Customer FoundPerson = .FindCustomerByPhone(11111111);
 

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Design;
 
-namespace GettingReal {
+namespace UnitTestGettingReal {
     public class Time {
         internal string Day;
         internal string Month;

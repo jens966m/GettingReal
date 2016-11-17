@@ -50,10 +50,14 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Customer.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Time.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SourceCodeGettingReal\SourceCodeGettingReal.csproj">
+      <Project>{d9ffc984-ae8d-41af-9546-9ad814057176}</Project>
+      <Name>SourceCodeGettingReal</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using GettingReal;
 
-namespace GettingRealProggram {
+namespace UnitTestGettingReal {
     public class UserFunctions
     { 
         public List<Customer> customers;
@@ -12,7 +11,6 @@ namespace GettingRealProggram {
         public void Init() {
                 customers = new List<Customer>();
         }
-
         public void RegisterUser()
         {
             Console.Clear();

@@ -45,15 +45,14 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserFunctions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\GettingReal\GettingReal.csproj">
-      <Project>{d1b37b2e-0ae7-498e-b723-748d887ae2cb}</Project>
-      <Name>GettingReal</Name>
+    <ProjectReference Include="..\SourceCodeGettingReal\SourceCodeGettingReal.csproj">
+      <Project>{d9ffc984-ae8d-41af-9546-9ad814057176}</Project>
+      <Name>SourceCodeGettingReal</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
