@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace UnitTestGettingReal {
+namespace SourceCodeGettingReal {
     public class UserFunctions
     { 
         public List<Customer> customers;
@@ -11,8 +11,7 @@ namespace UnitTestGettingReal {
         public void Init() {
                 customers = new List<Customer>();
         }
-        public void RegisterUser()
-        {
+        public void RegisterUser() {
             Console.Clear();
             Console.WriteLine("Fornavn på bruger");
             customer = new Customer();
@@ -75,6 +74,12 @@ namespace UnitTestGettingReal {
             Console.WriteLine("Navn: " + customer.Name + " " + customer.LastName + " - tlf: " + customer.Phone);
             Console.WriteLine();
             customers.Add(customer);
+        }
+
+        public Customer FindCustomerByPhone(int searchedPhone) {
+
+            Customer result = customers.Find(x => x.Phone == searchedPhone);
+            return result;
         }
 
         public Customer DoesUserExist() {

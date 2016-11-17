@@ -2,43 +2,47 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SourceCodeGettingReal;
 
 namespace UnitTestGettingReal {
     [TestClass]
     public class Test {
+        UserFunctions userFunctions;
+        Customer customer1;
+        Customer customer2;
+        Customer customer3;
+
+        [TestInitialize]
+        public void SetupTest() {
+            userFunctions = new UserFunctions();
+            userFunctions.Init();
+            customer1 = new Customer(11111111);
+            customer2 = new Customer(22222222);
+            customer3 = new Customer(33333333);
+            userFunctions.customers.Add(customer1);
+            userFunctions.customers.Add(customer2);
+            userFunctions.customers.Add(customer3);
+        }
         [TestMethod]
         public void CustomerHaveAName() {
-            Customer customer = new Customer();
-            customer.Name = "Jens";
-            customer.LastName = "Dideriksen";
-            customer.Phone = 88888888;
+            customer1.Name = "Jens";
+            customer1.LastName = "Dideriksen";
 
-            Assert.AreEqual("Jens", customer.Name);
-            Assert.AreEqual("Dideriksen", customer.LastName);
-            Assert.AreEqual(88888888, customer.Phone);
+            Assert.AreEqual("Jens", customer1.Name);
+            Assert.AreEqual("Dideriksen", customer1.LastName);
+            Assert.AreEqual(11111111, customer1.Phone);
         }
         [TestMethod]
-        public void ACustomerCanChooseATime()
-        {
-            Customer customer = new Customer();
-            customer.Times = new List<Time>();
+        public void ACustomerCanChooseATime() {
+           
+            customer2.BookATime("12", "12", "2016", "12", "00");
 
-            customer.BookATime("12", "12", "2016", "12", "00");
-            
-            Assert.AreEqual("12/12/2016 12:00", customer.Times[0].ToString());
-            
+            Assert.AreEqual("12/12/2016 12:00", customer2.Times[0].ToString());
         }
         [TestMethod]
-        public void AddCustomerToList() {
-            Customer person2 = new Customer();
-            person2.Name = "Peter";
-            person2.Phone = 11111111;
-            
-            customers.Add(person2);
-
-            Customer FoundPerson = .FindCustomerByPhone(11111111);
-
-            Assert.AreEqual(FoundPerson, person2);
+        public void FindCustomerByPhone() {
+            customer3.Name = "Peter";
+            Assert.AreEqual(userFunctions.FindCustomerByPhone(33333333), customer3);
         }
     }
 }
