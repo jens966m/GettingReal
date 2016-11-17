@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.Design;
-
-namespace SourceCodeGettingReal {
+﻿namespace SourceCodeGettingReal {
     public class Time {
         internal string Day;
         internal string Month;
