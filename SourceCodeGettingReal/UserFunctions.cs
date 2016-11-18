@@ -39,7 +39,7 @@ namespace SourceCodeGettingReal {
                 }
 
             } while (customer.LastName == "" || customer.LastName.Any(char.IsDigit));
-
+            /*
             if (phone == 0) {
                 Console.Clear();
                 Console.WriteLine("Telefonnummer på bruger");
@@ -48,15 +48,14 @@ namespace SourceCodeGettingReal {
                 bool canConvert;
                 while (true) {
                     tempPhoneString = Console.ReadLine();
-
-                    Console.Clear();
-                    Console.WriteLine("Telefonnummer skal indeholde 8 tal");
                     if (tempPhoneString == "exit") {
                         Console.Clear();
                         customer = null;
                         return;
                     }
 
+                    Console.Clear();
+                    Console.WriteLine("Telefonnummer skal indeholde 8 tal");
                     canConvert = int.TryParse(tempPhoneString, out tempPhone);
                     if (tempPhoneString.Length == 8) {
                         if (canConvert == true) {
@@ -68,13 +67,14 @@ namespace SourceCodeGettingReal {
                 Console.Clear();
                 Console.WriteLine("Bruger oprettet: ");
                 Console.WriteLine("Navn: " + customer.Name + " " + customer.LastName + " - tlf: " + customer.Phone);
-            } else {
-                //call with phone number allready
-                customer.Phone = phone;
+            } else {*/
+
+            //call with phone number allready
+            customer.Phone = phone;
                 Console.Clear();
                 Console.WriteLine("Bruger oprettet: ");
                 Console.WriteLine("Navn: " + customer.Name + " " + customer.LastName + " - tlf: " + phone);
-            }
+            //}
             customers.Add(customer);
         }
 
@@ -95,39 +95,57 @@ namespace SourceCodeGettingReal {
         public Customer DoesUserExist() {
             Customer currentCustomer = null;
             int phone;
+            bool canConvert;
             Console.Clear();
             Console.WriteLine("Indtast telefonnummer");
 
-            
             while (currentCustomer == null) {
                 string currentCustomerPhone = Console.ReadLine();
-                if (!int.TryParse(currentCustomerPhone, out phone)) {
+                if (currentCustomerPhone == "exit") {
                     Console.Clear();
-                    Console.WriteLine("Telefonnummer må kun indholde tal");
-                } else {
+                    customer = null;
+                    return customer;
+                }
+                
+                canConvert = int.TryParse(currentCustomerPhone, out phone);
+                if (currentCustomerPhone.Length == 8 && canConvert == true) {
                     if (FindCustomerByPhone(phone) != null) {
                         currentCustomer = FindCustomerByPhone(phone);
                     } else {
-                        Console.Clear();
-                        Console.WriteLine("Systemet genkender ikke dette nummer, øsnker de at regisrere dem? (ja/nej)");
-                        string newUser;
-                        newUser = Console.ReadLine();
-                        switch (newUser) {
-                            case "ja":
-                            RegisterUser(phone);
-                            break;
-
-                            case "nej":
-                            Console.Clear();
-                            DoesUserExist();
-                            break;
-                        }
-
+                        Console.WriteLine();
+                        Console.WriteLine("Systemet genkender ikke dette nummer, øsnker de at regisrere dem?)");
+                        Console.WriteLine("'nej' hvis du skrev forkert og vil prøve igen");
+                        Console.WriteLine("'ja' for at komme til registrering af ny bruger");
+                        ChooseIsNewUserMenu(phone);
                         currentCustomer = FindCustomerByPhone(phone);
                     }
+                } else {
+                    Console.Clear();
+                    Console.WriteLine("Telefonnummer skal indeholde 8 tal og kun tal");
                 }
             }
             return currentCustomer;
+        }
+
+        public void ChooseIsNewUserMenu(int phone) {
+
+            string newUser;
+            newUser = Console.ReadLine();
+            switch (newUser) {
+                case "ja":
+                    RegisterUser(phone);
+                    break;
+
+                case "nej":
+                    DoesUserExist();
+                    break;
+
+                default:
+                    Console.WriteLine("Skriv enten 'ja' eller 'nej'");
+                    ChooseIsNewUserMenu(phone);
+                    break;
+
+            }
         }
 
         public void ChooseDate(Customer thisCustomer) {

@@ -41,5 +41,42 @@ namespace UnitTestGettingReal {
             customer3.Name = "Peter";
             Assert.AreEqual(userFunctions.FindCustomerByPhone(33333333), customer3);
         }
+        [TestMethod]
+        public void ShowListOfCusomers() {
+            customer1.Name = "Jan";
+            customer1.LastName = "Jansen";
+            customer2.Name = "Bobby";
+            customer2.LastName = "Olsen";
+            customer3.Name = "Rut";
+            customer3.LastName = "Rutsen";
+
+            userFunctions.ListCustomers();
+        }
+
+        //SERVICE
+        [TestMethod]
+        public void ServiceHasADescriptionAndPrice() {
+
+            Service service1;
+            Service service2;
+            service1 = new Service("Herreklip", 250);
+
+            service2 = new Service("Dameklip", 400);
+
+            service1.description = "Herreklip";
+            service1.price = 250;
+
+
+            Assert.AreEqual("Herreklip", service1.description);
+
+            Assert.AreEqual(250, service1.price);
+        }
+        [TestMethod]
+        public void ChangeDescription() {
+            Service s = new Service("Herreklip");
+            Assert.AreEqual("Herreklip", s.description);
+            s.description = "Anden slags klip";
+            Assert.AreEqual("Anden slags klip", s.description);
+        }
     }
 }
