@@ -1,15 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 
 namespace SourceCodeGettingReal {
-    public class UserFunctions
-    { 
+    public class UserFunctions {
+        private static string connectioString = "Server=ealdb1.eal.local; Database=ejl48_db; User Id=ejl48_usr; Password=Baz1nga48;";
         public List<Customer> customers;
+        public int listStartLenght;
         Customer customer;
+
         
         public void Init() {
-                customers = new List<Customer>();
+            customers = new List<Customer>();
+            spGetAllCustomers();
+            listStartLenght = customers.Count();
+
         }
         public void RegisterUser(int phone = 0) {
             Console.Clear();
@@ -24,7 +31,7 @@ namespace SourceCodeGettingReal {
                     customer = null;
                     return;
                 }
-            } while (customer.Name == "" || customer.Name.Any(char.IsDigit));
+            } while (customer.Name == "" || customer.Name.Any(Char.IsDigit) || customer.Name.Contains(' '));
 
             Console.Clear();
             Console.WriteLine("Efternavn på bruger");
@@ -38,7 +45,7 @@ namespace SourceCodeGettingReal {
                     return;
                 }
 
-            } while (customer.LastName == "" || customer.LastName.Any(char.IsDigit));
+            } while (customer.LastName == "" || customer.LastName.Any(Char.IsDigit) || customer.LastName.Contains(' '));
             /*
             if (phone == 0) {
                 Console.Clear();
@@ -96,27 +103,48 @@ namespace SourceCodeGettingReal {
             Customer currentCustomer = null;
             int phone;
             bool canConvert;
+            string currentCustomerPhone = "";
             Console.Clear();
             Console.WriteLine("Indtast telefonnummer");
 
             while (currentCustomer == null) {
-                string currentCustomerPhone = Console.ReadLine();
+                currentCustomerPhone = Console.ReadLine();
                 if (currentCustomerPhone == "exit") {
                     Console.Clear();
                     customer = null;
                     return customer;
                 }
                 
-                canConvert = int.TryParse(currentCustomerPhone, out phone);
-                if (currentCustomerPhone.Length == 8 && canConvert == true) {
+                canConvert = Int32.TryParse(currentCustomerPhone, out phone);
+                if (currentCustomerPhone.Length == 8 && canConvert == true && !currentCustomerPhone.Contains(' ')) {
                     if (FindCustomerByPhone(phone) != null) {
                         currentCustomer = FindCustomerByPhone(phone);
                     } else {
                         Console.WriteLine();
-                        Console.WriteLine("Systemet genkender ikke dette nummer, øsnker de at regisrere dem?)");
+                        Console.WriteLine("Systemet genkender ikke dette nummer, øsnker de at registrere dem?");
                         Console.WriteLine("'nej' hvis du skrev forkert og vil prøve igen");
                         Console.WriteLine("'ja' for at komme til registrering af ny bruger");
-                        ChooseIsNewUserMenu(phone);
+
+                        string newUser;
+                        newUser = Console.ReadLine();
+                        switch (newUser) {
+                            case "ja":
+                                RegisterUser(phone);
+                                break;
+
+                            case "nej":
+                                return DoesUserExist();
+
+                            case "exit":
+                                customer = null;
+                                Console.Clear();
+                                return customer;
+
+                            default:
+                                Console.WriteLine("Skriv enten 'ja' eller 'nej'");
+                                break;
+
+                        }
                         currentCustomer = FindCustomerByPhone(phone);
                     }
                 } else {
@@ -125,28 +153,7 @@ namespace SourceCodeGettingReal {
                 }
             }
             return currentCustomer;
-        }
-
-        public void ChooseIsNewUserMenu(int phone) {
-
-            string newUser;
-            newUser = Console.ReadLine();
-            switch (newUser) {
-                case "ja":
-                    RegisterUser(phone);
-                    break;
-
-                case "nej":
-                    DoesUserExist();
-                    break;
-
-                default:
-                    Console.WriteLine("Skriv enten 'ja' eller 'nej'");
-                    ChooseIsNewUserMenu(phone);
-                    break;
-
-            }
-        }
+}
 
         public void ChooseDate(Customer thisCustomer) {
             Console.Clear();
@@ -185,6 +192,58 @@ namespace SourceCodeGettingReal {
                 Console.WriteLine(i+1 + ": " + customers[i].Name + " " + customers[i].LastName + " - tlf: " + customers[i].Phone);
             }
             Console.WriteLine();                  
+        }
+
+        public void spGetAllCustomers() {
+            using (SqlConnection con = new SqlConnection(connectioString))
+            {
+                try
+                {
+                    con.Open();
+
+                    SqlCommand cmd2 = new SqlCommand("spGetAllCustomers", con);
+                    cmd2.CommandType = CommandType.StoredProcedure;
+
+                    SqlDataReader reader = cmd2.ExecuteReader();
+
+                    if (reader.HasRows) {
+                        while (reader.Read()) {
+                            string firstName = reader["FirstName"].ToString().Trim();
+                            string lastName = reader["LastName"].ToString().Trim();
+                            int phone = Convert.ToInt32(reader["Phone"].ToString().Trim());
+                            customers.Add(new Customer(firstName, lastName, phone));
+                        }
+                    }
+                    con.Close();
+                } catch (SqlException e) {
+                    Console.WriteLine("Exception: " + e.Message);
+                    Console.WriteLine();
+                }
+            }
+        }
+
+        public void DatabaseUpdate() {
+            using (SqlConnection con = new SqlConnection(connectioString)) {
+                try {
+                    con.Open();
+
+                    for (int i = listStartLenght; i < customers.Count; i++) {
+                        SqlCommand cmd1 = new SqlCommand("spInsertCustomer", con);
+                        cmd1.CommandType = CommandType.StoredProcedure;
+                        cmd1.Parameters.Add(new SqlParameter("FirstName", customers[i].Name));
+                        cmd1.Parameters.Add(new SqlParameter("LastName", customers[i].LastName));
+                        cmd1.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
+                        cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[0].NewDatetime()));
+                        cmd1.ExecuteNonQuery();
+                    }
+                    con.Close();
+
+                } catch (SqlException e) {
+                    Console.WriteLine("Exception: " + e.Message);
+                    Console.WriteLine();
+                }
+            }
+            
         }
     }
 }

@@ -16,6 +16,12 @@ namespace SourceCodeGettingReal {
         public Customer() {
         }
 
+        public Customer(string firstName, string lastName, int phone) {
+            Name = firstName;
+            LastName = lastName;
+            Phone = phone;
+        }
+
         public void BookATime(string day, string month, string year, string hour, string minuttes) {
             Times.Add(new Time() { Day = day, Month = month, Year = year, Hour = hour, Minuttes = minuttes });
         }
