@@ -34,7 +34,7 @@ namespace UnitTestGettingReal {
            
             customer2.BookATime("12", "12", "2016", "12", "00");
 
-            Assert.AreEqual("12/12/2016 12:00", customer2.Times[0].ToString());
+            Assert.AreEqual("2016-12-12 12:00:00", customer2.Times[0].ToString());
         }
         [TestMethod]
         public void FindCustomerByPhone() {
