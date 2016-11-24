@@ -2,7 +2,7 @@
 using System.Security.Cryptography.X509Certificates;
 
 namespace SourceCodeGettingReal {
-    public class Time {
+    public class Time {/*
         internal string Day;
         internal string Month;
         internal string Hour;
@@ -20,6 +20,6 @@ namespace SourceCodeGettingReal {
         {
             string res = Year + '-' + Month + '-' + Day + ' ' + Hour + ':' + Minuttes + ":" + Second;
             return res;
-        }
+        }*/
     }
 }

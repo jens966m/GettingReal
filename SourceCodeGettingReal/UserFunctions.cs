@@ -175,7 +175,7 @@ namespace SourceCodeGettingReal {
             Console.Write(':');
             string minute = Console.ReadLine();
             Console.Clear();
-            thisCustomer.BookATime(day, month, year, hour, minute);
+            thisCustomer.BookATime(day, month, year, hour, minute, "00");
 
             //show booked date
             int lastTime = thisCustomer.Times.Count() - 1;
@@ -211,6 +211,10 @@ namespace SourceCodeGettingReal {
                             string firstName = reader["FirstName"].ToString().Trim();
                             string lastName = reader["LastName"].ToString().Trim();
                             int phone = Convert.ToInt32(reader["Phone"].ToString().Trim());
+                            List<DateTime> times = new List<DateTime>();
+                            DateTime datevalue;
+                            DateTime.TryParse(reader["Booking"].ToString(), out datevalue);
+                            times.Add(datevalue);
                             customers.Add(new Customer(firstName, lastName, phone));
                         }
                     }
@@ -233,7 +237,8 @@ namespace SourceCodeGettingReal {
                         cmd1.Parameters.Add(new SqlParameter("FirstName", customers[i].Name));
                         cmd1.Parameters.Add(new SqlParameter("LastName", customers[i].LastName));
                         cmd1.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
-                        cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[0].NewDatetime()));
+                        //cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[0].NewDatetime()));
+                        cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[0]));
                         cmd1.ExecuteNonQuery();
                     }
                     con.Close();
