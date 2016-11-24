@@ -4,35 +4,29 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 
-namespace SourceCodeGettingReal
-{
-    public class UserFunctions
-    {
+namespace SourceCodeGettingReal {
+    public class UserFunctions {
         private static string connectioString = "Server=ealdb1.eal.local; Database=ejl48_db; User Id=ejl48_usr; Password=Baz1nga48;";
         public List<Customer> customers;
         public int listStartLenght;
         Customer customer;
 
 
-        public void Init()
-        {
+        public void Init() {
             customers = new List<Customer>();
             spGetAllCustomers();
             listStartLenght = customers.Count();
 
         }
-        public void RegisterUser(int phone = 0)
-        {
+        public void RegisterUser(int phone = 0) {
             Console.Clear();
             Console.WriteLine("Fornavn på bruger");
             customer = new Customer();
-            do
-            {
+            do {
                 customer.Name = Console.ReadLine();
                 Console.Clear();
                 Console.WriteLine("Fornavn på bruger, må ikke indholde tal eller være blankt");
-                if (customer.Name == "exit")
-                {
+                if (customer.Name == "exit") {
                     Console.Clear();
                     customer = null;
                     return;
@@ -41,13 +35,11 @@ namespace SourceCodeGettingReal
 
             Console.Clear();
             Console.WriteLine("Efternavn på bruger");
-            do
-            {
+            do {
                 customer.LastName = Console.ReadLine();
                 Console.Clear();
                 Console.WriteLine("Efternavn på bruger, må ikke indholde tal eller være blankt");
-                if (customer.LastName == "exit")
-                {
+                if (customer.LastName == "exit") {
                     Console.Clear();
                     customer = null;
                     return;
@@ -93,25 +85,21 @@ namespace SourceCodeGettingReal
             customers.Add(customer);
         }
 
-        public void ShowTimes(Customer currentCustomer)
-        {
+        public void ShowTimes(Customer currentCustomer) {
             Console.WriteLine("Liste af tider:");
-            for (int i = 0; i < currentCustomer.Times.Count; i++)
-            {
+            for (int i = 0; i < currentCustomer.Times.Count; i++) {
                 Console.WriteLine(i + 1 + ": " + currentCustomer.Times[i].ToString());
             }
             Console.WriteLine();
         }
 
-        public Customer FindCustomerByPhone(int searchedPhone)
-        {
+        public Customer FindCustomerByPhone(int searchedPhone) {
             Customer result = customers.Find(x => x.Phone == searchedPhone);
             return result;
         }
 
 
-        public Customer DoesUserExist()
-        {
+        public Customer DoesUserExist() {
             Customer currentCustomer = null;
             int phone;
             bool canConvert;
@@ -119,25 +107,19 @@ namespace SourceCodeGettingReal
             Console.Clear();
             Console.WriteLine("Indtast telefonnummer");
 
-            while (currentCustomer == null)
-            {
+            while (currentCustomer == null) {
                 currentCustomerPhone = Console.ReadLine();
-                if (currentCustomerPhone == "exit")
-                {
+                if (currentCustomerPhone == "exit") {
                     Console.Clear();
                     customer = null;
                     return customer;
                 }
 
                 canConvert = Int32.TryParse(currentCustomerPhone, out phone);
-                if (currentCustomerPhone.Length == 8 && canConvert == true && !currentCustomerPhone.Contains(' '))
-                {
-                    if (FindCustomerByPhone(phone) != null)
-                    {
+                if (currentCustomerPhone.Length == 8 && canConvert == true && !currentCustomerPhone.Contains(' ')) {
+                    if (FindCustomerByPhone(phone) != null) {
                         currentCustomer = FindCustomerByPhone(phone);
-                    }
-                    else
-                    {
+                    } else {
                         Console.WriteLine();
                         Console.WriteLine("Systemet genkender ikke dette nummer, øsnker de at registrere dem?");
                         Console.WriteLine("'nej' hvis du skrev forkert og vil prøve igen");
@@ -145,8 +127,7 @@ namespace SourceCodeGettingReal
 
                         string newUser;
                         newUser = Console.ReadLine();
-                        switch (newUser)
-                        {
+                        switch (newUser) {
                             case "ja":
                                 RegisterUser(phone);
                                 break;
@@ -166,9 +147,7 @@ namespace SourceCodeGettingReal
                         }
                         currentCustomer = FindCustomerByPhone(phone);
                     }
-                }
-                else
-                {
+                } else {
                     Console.Clear();
                     Console.WriteLine("Telefonnummer skal indeholde 8 tal og kun tal");
                 }
@@ -176,8 +155,7 @@ namespace SourceCodeGettingReal
             return currentCustomer;
         }
 
-        public void ChooseDate(Customer thisCustomer)
-        {
+        public void ChooseDate(Customer thisCustomer) {
             Console.Clear();
             Console.WriteLine("Hvornår vil du klippes");
             Console.WriteLine("Hvilket år");
@@ -207,23 +185,18 @@ namespace SourceCodeGettingReal
             Console.WriteLine();
         }
 
-        public void ListCustomers()
-        {
+        public void ListCustomers() {
             Console.Clear();
             Console.WriteLine("List of cusomers:");
-            for (int i = 0; i < customers.Count; i++)
-            {
+            for (int i = 0; i < customers.Count; i++) {
                 Console.WriteLine(i + 1 + ": " + customers[i].Name + " " + customers[i].LastName + " - tlf: " + customers[i].Phone);
             }
             Console.WriteLine();
         }
 
-        public void spGetAllCustomers()
-        {
-            using (SqlConnection con = new SqlConnection(connectioString))
-            {
-                try
-                {
+        public void spGetAllCustomers() {
+            using (SqlConnection con = new SqlConnection(connectioString)) {
+                try {
                     con.Open();
 
                     SqlCommand cmd2 = new SqlCommand("spGetAllCustomers", con);
@@ -233,24 +206,17 @@ namespace SourceCodeGettingReal
 
                     List<DateTime> times = new List<DateTime>();
 
-                    if (reader.HasRows)
-                    {
+                    if (reader.HasRows) {
                         string firstName = null;
                         string lastName = null;
                         int phone = 0;
-                        while (reader.Read())
-                        {
+                        while (reader.Read()) {
                             firstName = reader["FirstName"].ToString().Trim();
                             lastName = reader["LastName"].ToString().Trim();
                             phone = Convert.ToInt32(reader["Phone"].ToString().Trim());
-
-
                         }
-                        if (reader.NextResult())
-                        {
-                            while (reader.Read())
-                            {
-
+                        if (reader.NextResult()) {
+                            while (reader.Read()) {
                                 DateTime datevalue;
                                 DateTime.TryParse(reader["BookingDateTime"].ToString(), out datevalue);
                                 times.Add(datevalue);
@@ -260,32 +226,25 @@ namespace SourceCodeGettingReal
                         customers.Add(new Customer(firstName, lastName, phone, times));
                     }
                     con.Close();
-                }
-                catch (SqlException e)
-                {
+                } catch (SqlException e) {
                     Console.WriteLine("Exception: " + e.Message);
                     Console.WriteLine();
                 }
             }
         }
 
-        public void DatabaseUpdate()
-        {
-            using (SqlConnection con = new SqlConnection(connectioString))
-            {
-                try
-                {
+        public void DatabaseUpdate() {
+            using (SqlConnection con = new SqlConnection(connectioString)) {
+                try {
                     con.Open();
 
-                    for (int i = listStartLenght; i < customers.Count; i++)
-                    {
+                    for (int i = listStartLenght; i < customers.Count; i++) {
                         SqlCommand cmd1 = new SqlCommand("spInsertCustomer", con);
                         cmd1.CommandType = CommandType.StoredProcedure;
                         cmd1.Parameters.Add(new SqlParameter("FirstName", customers[i].Name));
                         cmd1.Parameters.Add(new SqlParameter("LastName", customers[i].LastName));
                         cmd1.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
-                        if (customers[i].Times.Count > 0)
-                        {
+                        if (customers[i].Times.Count > 0) {
 
                             cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[0]));
                         }
@@ -294,9 +253,7 @@ namespace SourceCodeGettingReal
                     }
                     con.Close();
 
-                }
-                catch (SqlException e)
-                {
+                } catch (SqlException e) {
                     Console.WriteLine("Exception: " + e.Message);
                     Console.WriteLine();
                 }

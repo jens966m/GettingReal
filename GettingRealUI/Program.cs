@@ -1,9 +1,7 @@
 ﻿using SourceCodeGettingReal;
 
-namespace GettingRealUI
-{
-    class Program
-    {
+namespace GettingRealUI {
+    class Program {
         static void Main(string[] args) {
             Program myProgram = new Program();
             myProgram.Run();

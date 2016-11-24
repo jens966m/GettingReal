@@ -53,11 +53,11 @@ namespace SourceCodeGettingReal {
                 currentCustomer = userFunctions.DoesUserExist();
                 Console.Clear();
             }
-            
+
             if (currentCustomer == null) {
-                MainMenu(); 
+                MainMenu();
             }
-            
+
             Console.WriteLine("Du er logget på som: " + currentCustomer.Name + ' ' + currentCustomer.LastName);
             Console.WriteLine("Tryk '1' hvis du ønsker at oprette en ny tid");
             Console.WriteLine("Tryk '2' hvis du ønsker at se liste over dine tider");
@@ -72,7 +72,7 @@ namespace SourceCodeGettingReal {
                     break;
 
                 case "2":
-                Console.Clear();
+                    Console.Clear();
                     userFunctions.ShowTimes(currentCustomer);
                     UserMenu(currentCustomer);
                     break;
