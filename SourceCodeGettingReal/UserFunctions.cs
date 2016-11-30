@@ -6,6 +6,7 @@ using System.Linq;
 
 namespace SourceCodeGettingReal {
     public class UserFunctions {
+        public Menu menu = new Menu();
         private static string connectioString = "Server=ealdb1.eal.local; Database=ejl48_db; User Id=ejl48_usr; Password=Baz1nga48;";
         public List<Customer> customers;
         public int listStartLenght;
@@ -97,7 +98,11 @@ namespace SourceCodeGettingReal {
             Customer result = customers.Find(x => x.Phone == searchedPhone);
             return result;
         }
-
+        public Customer FindCustomerByTime(DateTime nextTime, string haircutter) {
+            //missing haircutter specific!
+            Customer result = customers.Find(x => x.Times.Contains(nextTime));
+            return result;
+        }
 
         public Customer DoesUserExist() {
             Customer currentCustomer = null;
@@ -153,6 +158,13 @@ namespace SourceCodeGettingReal {
                 }
             }
             return currentCustomer;
+        }
+
+        public void PrintCustomer(Customer foundCustomer) {
+            Console.Clear();
+            Console.WriteLine("Tid: " + foundCustomer.Times[0]);
+            Console.WriteLine("Navn: " + foundCustomer.Name + " " + foundCustomer.LastName);
+            Console.WriteLine("Tlf: " + foundCustomer.Phone);
         }
 
         public void ChooseDate(Customer thisCustomer) {
@@ -220,9 +232,10 @@ namespace SourceCodeGettingReal {
                                 DateTime datevalue;
                                 DateTime.TryParse(reader["BookingDateTime"].ToString(), out datevalue);
                                 times.Add(datevalue);
+                                menu.haircutters[0].Times.Add(datevalue);
                             }
                         }
-
+                        
                         customers.Add(new Customer(firstName, lastName, phone, times));
                     }
                     con.Close();

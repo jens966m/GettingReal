@@ -3,11 +3,17 @@ using System.Collections.Generic;
 
 namespace SourceCodeGettingReal {
     public class Menu {
-        UserFunctions userFunctions;
+        public UserFunctions userFunctions;
+        public List<Haircutter> haircutters;
 
         public void Init() {
             userFunctions = new UserFunctions();
             userFunctions.Init();
+            
+            //temp
+            haircutters = new List<Haircutter>();
+            Haircutter haircutter = new Haircutter("Louise");
+            haircutters.Add(haircutter);
         }
 
         public void MainMenu() {
@@ -17,7 +23,6 @@ namespace SourceCodeGettingReal {
             ConsoleKeyInfo cki;
             do {
                 cki = Console.ReadKey(false);
-
                 switch (cki.KeyChar.ToString()) {
                     case "1":
                         UserMenu();
@@ -25,7 +30,7 @@ namespace SourceCodeGettingReal {
                         break;
 
                     case "2":
-                        userFunctions.ListCustomers();
+                        HaircutterMenu();
                         MainMenu();
                         break;
 
@@ -35,16 +40,14 @@ namespace SourceCodeGettingReal {
                         Console.WriteLine("tryk '1' for kunde");
                         Console.WriteLine("tryk '2' for frisør");
                         Console.WriteLine("Forkert input");
-                        userFunctions.DatabaseUpdate();
+                        //userFunctions.DatabaseUpdate();
                         Console.WriteLine();
                         break;
                 }
-
             } while (cki.Key != ConsoleKey.Escape);
             userFunctions.DatabaseUpdate();
             Environment.Exit(1);
         }
-
         public void UserMenu(Customer tempcurrentcustomer = null) {
             ConsoleKeyInfo cki;
             Customer currentCustomer;
@@ -53,7 +56,6 @@ namespace SourceCodeGettingReal {
                 currentCustomer = userFunctions.DoesUserExist();
                 Console.Clear();
             }
-
             if (currentCustomer == null) {
                 MainMenu();
             }
@@ -95,6 +97,40 @@ namespace SourceCodeGettingReal {
                     MainMenu();
                     break;
             }
+        }
+        public void HaircutterMenu() {
+            ConsoleKeyInfo cki;
+            cki = Console.ReadKey(false);
+            Console.WriteLine("Du er logget på som: Frisør");
+            Console.WriteLine("Tryk '1' hvis du ønsker at se liste over kunder");
+            Console.WriteLine("Tryk '2' hvis du ønsker at se næste kunde og deres tid");
+            //Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden");
+            Console.WriteLine("Tryk '4' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+            switch (cki.KeyChar.ToString()) {
+                case "1":
+                    userFunctions.ListCustomers();
+                    break;
+                case "2":
+                    //asuming signed in as Louise
+                    DateTime nextTime = haircutters.Find(x => x.Name == "Louise").NextTime();
+                    Customer foundCustomer = userFunctions.FindCustomerByTime(nextTime, "Louise");
+                    userFunctions.PrintCustomer(foundCustomer);
+                    Console.WriteLine();
+                    break;
+
+                case "4":
+                    Console.Clear();
+                    MainMenu();
+                    break;
+
+                default:
+                    Console.WriteLine();
+                    Console.Clear();
+                    Console.WriteLine("Forkert input");
+                    Console.WriteLine();
+                    HaircutterMenu();
+                    break;
+            }        
         }
     }
 }
