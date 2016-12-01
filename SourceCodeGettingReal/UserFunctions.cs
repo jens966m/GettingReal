@@ -6,7 +6,6 @@ using System.Linq;
 
 namespace SourceCodeGettingReal {
     public class UserFunctions {
-        public Menu menu = new Menu();
         private static string connectioString = "Server=ealdb1.eal.local; Database=ejl48_db; User Id=ejl48_usr; Password=Baz1nga48;";
         public List<Customer> customers;
         public int listStartLenght;
@@ -232,7 +231,7 @@ namespace SourceCodeGettingReal {
                                 DateTime datevalue;
                                 DateTime.TryParse(reader["BookingDateTime"].ToString(), out datevalue);
                                 times.Add(datevalue);
-                                menu.haircutters[0].Times.Add(datevalue);
+                                Menu.haircutters[0].Times.Add(datevalue);
                             }
                         }
                         

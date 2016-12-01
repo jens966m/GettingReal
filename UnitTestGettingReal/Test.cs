@@ -32,8 +32,8 @@ namespace UnitTestGettingReal {
 
             haircutter1 = new Haircutter("Louise");
             haircutter2 = new Haircutter("Jesper");
-            menu.haircutters.Add(haircutter1);
-            menu.haircutters.Add(haircutter2);
+            Menu.haircutters.Add(haircutter1);
+            Menu.haircutters.Add(haircutter2);
 
 
         }

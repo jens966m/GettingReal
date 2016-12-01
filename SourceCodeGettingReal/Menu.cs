@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace SourceCodeGettingReal {
     public class Menu {
         public UserFunctions userFunctions;
-        public List<Haircutter> haircutters;
+        public static List<Haircutter> haircutters;
 
         public void Init() {
             userFunctions = new UserFunctions();
