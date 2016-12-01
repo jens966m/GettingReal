@@ -7,13 +7,13 @@ namespace SourceCodeGettingReal {
         public static List<Haircutter> haircutters;
 
         public void Init() {
-            userFunctions = new UserFunctions();
-            userFunctions.Init();
-            
             //temp
             haircutters = new List<Haircutter>();
             Haircutter haircutter = new Haircutter("Louise");
             haircutters.Add(haircutter);
+            
+            userFunctions = new UserFunctions();
+            userFunctions.Init();
         }
 
         public void MainMenu() {

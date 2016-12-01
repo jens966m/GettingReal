@@ -215,7 +215,7 @@ namespace SourceCodeGettingReal {
 
                     SqlDataReader reader = cmd2.ExecuteReader();
 
-                    List<DateTime> times = new List<DateTime>();
+                    List<DateTime> tempTimes = new List<DateTime>();
 
                     if (reader.HasRows) {
                         string firstName = null;
@@ -225,17 +225,18 @@ namespace SourceCodeGettingReal {
                             firstName = reader["FirstName"].ToString().Trim();
                             lastName = reader["LastName"].ToString().Trim();
                             phone = Convert.ToInt32(reader["Phone"].ToString().Trim());
+                            customers.Add(new Customer(firstName, lastName, phone));
                         }
                         if (reader.NextResult()) {
                             while (reader.Read()) {
                                 DateTime datevalue;
                                 DateTime.TryParse(reader["BookingDateTime"].ToString(), out datevalue);
-                                times.Add(datevalue);
+                                phone = Convert.ToInt32(reader["BookingId"].ToString().Trim());
+                                tempTimes.Add(datevalue);
                                 Menu.haircutters[0].Times.Add(datevalue);
+                                FindCustomerByPhone(phone).Times.Add(datevalue);
                             }
                         }
-                        
-                        customers.Add(new Customer(firstName, lastName, phone, times));
                     }
                     con.Close();
                 } catch (SqlException e) {
@@ -258,10 +259,12 @@ namespace SourceCodeGettingReal {
                         cmd1.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
                         if (customers[i].Times.Count > 0) {
 
-                            cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[0]));
+                            //del det op istedet...
+                            for (int j = 0; j < customers[i].Times.Count; j++) {
+                                cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[j]));
+                            }
                         }
                         cmd1.ExecuteNonQuery();
-
                     }
                     con.Close();
 
@@ -270,7 +273,6 @@ namespace SourceCodeGettingReal {
                     Console.WriteLine();
                 }
             }
-
         }
     }
 }
