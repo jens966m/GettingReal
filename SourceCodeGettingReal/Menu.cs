@@ -18,8 +18,8 @@ namespace SourceCodeGettingReal {
 
         public void MainMenu() {
             Console.WriteLine("MENU:");
-            Console.WriteLine("tryk '1' for kunde");
-            Console.WriteLine("tryk '2' for frisør");
+            Console.WriteLine("tryk '1' hvis du er en kunde");
+            Console.WriteLine("tryk '2' hvis du er frisør");
             ConsoleKeyInfo cki;
             do {
                 cki = Console.ReadKey(false);
@@ -30,6 +30,7 @@ namespace SourceCodeGettingReal {
                         break;
 
                     case "2":
+                        Console.Clear();
                         HaircutterMenu();
                         MainMenu();
                         break;
@@ -40,7 +41,7 @@ namespace SourceCodeGettingReal {
                         Console.WriteLine("tryk '1' for kunde");
                         Console.WriteLine("tryk '2' for frisør");
                         Console.WriteLine("Forkert input");
-                        //userFunctions.DatabaseUpdate();
+                        userFunctions.DatabaseUpdate();
                         Console.WriteLine();
                         break;
                 }
@@ -100,22 +101,26 @@ namespace SourceCodeGettingReal {
         }
         public void HaircutterMenu() {
             ConsoleKeyInfo cki;
-            cki = Console.ReadKey(false);
             Console.WriteLine("Du er logget på som: Frisør");
             Console.WriteLine("Tryk '1' hvis du ønsker at se liste over kunder");
             Console.WriteLine("Tryk '2' hvis du ønsker at se næste kunde og deres tid");
-            //Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden");
+            Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden (TBD)");
             Console.WriteLine("Tryk '4' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+            cki = Console.ReadKey(false);
             switch (cki.KeyChar.ToString()) {
                 case "1":
+                    Console.Clear();
                     userFunctions.ListCustomers();
+                    HaircutterMenu();
                     break;
                 case "2":
+                    Console.Clear();
                     //asuming signed in as Louise
                     DateTime nextTime = haircutters.Find(x => x.Name == "Louise").NextTime();
                     Customer foundCustomer = userFunctions.FindCustomerByTime(nextTime, "Louise");
                     userFunctions.PrintCustomer(foundCustomer);
                     Console.WriteLine();
+                    HaircutterMenu();
                     break;
 
                 case "4":

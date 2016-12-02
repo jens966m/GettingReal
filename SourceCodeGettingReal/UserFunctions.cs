@@ -259,7 +259,7 @@ namespace SourceCodeGettingReal {
                         cmd1.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
                         if (customers[i].Times.Count > 0) {
 
-                            //del det op istedet...
+                            //del det op istedet...?
                             for (int j = 0; j < customers[i].Times.Count; j++) {
                                 cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[j]));
                             }
