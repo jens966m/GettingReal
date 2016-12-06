@@ -10,13 +10,13 @@ namespace SourceCodeGettingReal {
         public List<Customer> customers;
         public int listStartLenght;
         Customer customer;
-
+        public static List<AvailableTimes> availableDates;
 
         public void Init() {
             customers = new List<Customer>();
+            availableDates = new List<AvailableTimes>();
             spGetAllCustomers();
             listStartLenght = customers.Count();
-
         }
         public void RegisterUser(int phone = 0) {
             Console.Clear();
@@ -159,6 +159,10 @@ namespace SourceCodeGettingReal {
             return currentCustomer;
         }
 
+        public List<AvailableTimes> getAvailableTimes() {
+            return availableDates;
+        }
+
         public void PrintCustomer(Customer foundCustomer) {
             Console.Clear();
             Console.WriteLine("Tid: " + foundCustomer.Times[0]);
@@ -235,6 +239,17 @@ namespace SourceCodeGettingReal {
                                 tempTimes.Add(datevalue);
                                 Menu.haircutters[0].Times.Add(datevalue);
                                 FindCustomerByPhone(phone).Times.Add(datevalue);
+
+                                AvailableTimes tempday;
+                                if ((availableDates.Find(x => x.Date.Contains(datevalue.Date.ToString()))) == null) {
+                                    tempday = new AvailableTimes(datevalue.Date.ToString(), datevalue.Day.ToString());
+                                    tempday.Init();
+                                    availableDates.Add(tempday);
+                                    tempday.BookTime(datevalue.TimeOfDay.ToString(), 60);
+                                } else {
+                                    availableDates.Find(x => x.Date.Contains(datevalue.Date.ToString())).BookTime(datevalue.TimeOfDay.ToString(), 60);
+                                }
+
                             }
                         }
                     }
@@ -257,14 +272,17 @@ namespace SourceCodeGettingReal {
                         cmd1.Parameters.Add(new SqlParameter("FirstName", customers[i].Name));
                         cmd1.Parameters.Add(new SqlParameter("LastName", customers[i].LastName));
                         cmd1.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
-                        if (customers[i].Times.Count > 0) {
+                        cmd1.ExecuteNonQuery();
 
-                            //del det op istedet...?
+                        if (customers[i].Times.Count > 0) {
                             for (int j = 0; j < customers[i].Times.Count; j++) {
-                                cmd1.Parameters.Add(new SqlParameter("Booking", customers[i].Times[j]));
+                                SqlCommand cmd2 = new SqlCommand("spInsertBooking", con);
+                                cmd2.CommandType = CommandType.StoredProcedure;
+                                cmd2.Parameters.Add(new SqlParameter("Phone", customers[i].Phone));
+                                cmd2.Parameters.Add(new SqlParameter("Booking", customers[i].Times[j]));
+                                cmd2.ExecuteNonQuery();
                             }
                         }
-                        cmd1.ExecuteNonQuery();
                     }
                     con.Close();
 
@@ -273,6 +291,9 @@ namespace SourceCodeGettingReal {
                     Console.WriteLine();
                 }
             }
+        }
+        public List<Customer> HentCostumerListe() {
+            return customers;
         }
     }
 }

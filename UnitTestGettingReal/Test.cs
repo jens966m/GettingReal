@@ -37,6 +37,7 @@ namespace UnitTestGettingReal {
 
 
         }
+        //Customer
         [TestMethod]
         public void CustomerHaveAName() {
             customer1.Name = "Jens";
@@ -68,6 +69,20 @@ namespace UnitTestGettingReal {
             customer3.LastName = "Rutsen";
 
             userFunctions.ListCustomers();
+        }
+
+        //AvailableTimes
+        [TestMethod]
+        public void IsTimeAvailable() {
+            AvailableTimes availableTimes = new AvailableTimes("12-12-2016", "Monday");
+            availableTimes.Init();
+
+            int length = 60;
+            string beginTime = "09:00";
+            availableTimes.BookTime(beginTime, length);
+            for (int i = 0; i < length; i++) {
+                Assert.AreEqual(false, availableTimes.Available[i]);
+            }
         }
 
         //HAIRCUTTER

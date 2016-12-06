@@ -5,6 +5,7 @@ namespace SourceCodeGettingReal {
     public class Menu {
         public UserFunctions userFunctions;
         public static List<Haircutter> haircutters;
+        
 
         public void Init() {
             //temp
@@ -104,8 +105,9 @@ namespace SourceCodeGettingReal {
             Console.WriteLine("Du er logget på som: Frisør");
             Console.WriteLine("Tryk '1' hvis du ønsker at se liste over kunder");
             Console.WriteLine("Tryk '2' hvis du ønsker at se næste kunde og deres tid");
-            Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden (TBD)");
-            Console.WriteLine("Tryk '4' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+            Console.WriteLine("Tryk '3' hvis du ønsker at se om du har ledige tider idag");
+            Console.WriteLine("Tryk '4' hvis du ønsker at logge på som en anden (TBD)");
+            Console.WriteLine("Tryk '5' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
             cki = Console.ReadKey(false);
             switch (cki.KeyChar.ToString()) {
                 case "1":
@@ -123,7 +125,25 @@ namespace SourceCodeGettingReal {
                     HaircutterMenu();
                     break;
 
-                case "4":
+                case "3":
+                    Console.Clear();
+                    List<AvailableTimes> tempDates = userFunctions.getAvailableTimes();
+                    AvailableTimes Today = tempDates.Find(x => x.Date == DateTime.Now.ToString());
+                    string[] tempTimes = Today.ShowTimes().Split(' ');
+                    if (tempTimes.Length > 1) {
+                        Console.WriteLine("Du har ledig tid: ");
+                        for (int i = 0; i < tempTimes.Length; i += 2) {
+                            Console.WriteLine("Fra: " + tempTimes[i] + " Til: " + tempTimes[i + 1]);
+                            Console.WriteLine("&");
+                        }
+                    } else {
+                        Console.WriteLine("Du har ingen ledige tider.");
+                    }
+                    Console.WriteLine();
+                    HaircutterMenu();
+                    break;
+
+                case "5":
                     Console.Clear();
                     MainMenu();
                     break;
