@@ -34,7 +34,7 @@ namespace SourceCodeGettingReal {
         }
 
         public void Init() {
-            int MinOfDay = (closedHour * 60) + closedMin;
+            int MinOfDay = ((closedHour-openHour) * 60) + closedMin-openMin;
             Available = new BitArray(MinOfDay, true);
         }
         public void BookTime(string beginTime, int length) {
@@ -51,21 +51,21 @@ namespace SourceCodeGettingReal {
             for (int i = 0; i < Available.Length; i++) {
                 if (Available[i] == true && available2 == false) {
                     available2 = true;
-                    Result += calcTime(i);
+                    Result += calcTime(i) + " ";
                 } else if (Available[i] == false && available2 == true) {
                     available2 = false;
-                    Result += calcTime(i - 1);
-                } else if (i == Available.Length && available2 == true) {
-                    Result += calcTime(i - 1);
+                    Result += calcTime(i) + " ";
+                } else if (i+1 == Available.Length && available2 == true) {
+                    Result += calcTime(i+1);
                 }
             }
             //Format: is true: fra til fra til....
             //e.g. "09:00 11:00 11:15 11:45 13:00 15:00"
-            return Result;
+            return Result.TrimEnd(' ');
         }
 
         public string calcTime(int i) {
-            return (i / 60).ToString() + ":" + (i % 60).ToString();
+            return ((i / 60)+openHour).ToString("00") + ":" + ((i % 60)+openMin).ToString("00");
         }
     }
 }

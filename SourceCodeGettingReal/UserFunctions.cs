@@ -242,7 +242,7 @@ namespace SourceCodeGettingReal {
 
                                 AvailableTimes tempday;
                                 if ((availableDates.Find(x => x.Date.Contains(datevalue.Date.ToString()))) == null) {
-                                    tempday = new AvailableTimes(datevalue.Date.ToString(), datevalue.Day.ToString());
+                                    tempday = new AvailableTimes(datevalue.Date.ToString(), datevalue.DayOfWeek.ToString());
                                     tempday.Init();
                                     availableDates.Add(tempday);
                                     tempday.BookTime(datevalue.TimeOfDay.ToString(), 60);

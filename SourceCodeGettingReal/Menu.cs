@@ -128,13 +128,15 @@ namespace SourceCodeGettingReal {
                 case "3":
                     Console.Clear();
                     List<AvailableTimes> tempDates = userFunctions.getAvailableTimes();
-                    AvailableTimes Today = tempDates.Find(x => x.Date == DateTime.Now.ToString());
+                    AvailableTimes Today = tempDates.Find(x => x.Date == DateTime.Now.Date.ToString());
                     string[] tempTimes = Today.ShowTimes().Split(' ');
                     if (tempTimes.Length > 1) {
                         Console.WriteLine("Du har ledig tid: ");
                         for (int i = 0; i < tempTimes.Length; i += 2) {
                             Console.WriteLine("Fra: " + tempTimes[i] + " Til: " + tempTimes[i + 1]);
-                            Console.WriteLine("&");
+                            if (i+2 != tempTimes.Length) {
+                                Console.WriteLine("&");
+                            }
                         }
                     } else {
                         Console.WriteLine("Du har ingen ledige tider.");
