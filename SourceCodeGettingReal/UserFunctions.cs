@@ -192,6 +192,18 @@ namespace SourceCodeGettingReal {
             Console.Clear();
             thisCustomer.BookATime(day, month, year, hour, minute, "00");
 
+            AvailableTimes tempday;
+            if ((availableDates.Find(x => x.Date.ToString() == day + "-" + month + "-" + year + " " + "00:00:00")) == null) {
+                tempday = new AvailableTimes(day + "-" + month + "-" + year + " " + "00:00:00", thisCustomer.Times.Last().DayOfWeek.ToString());
+                tempday.Init();
+                availableDates.Add(tempday);
+                tempday.BookTime(hour + ":" + minute, 60);
+            } else {
+                availableDates.Find(x => x.Date.ToString() == day + "-" + month + "-" + year + " " + "00:00:00").BookTime(hour + ":" + minute, 60);
+            }
+
+
+
             //show booked date
             int lastTime = thisCustomer.Times.Count() - 1;
             string timeString = thisCustomer.Times[lastTime].ToString();
