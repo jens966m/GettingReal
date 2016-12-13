@@ -75,7 +75,7 @@ namespace UnitTestGettingReal {
         //AvailableTimes
         [TestMethod]
         public void IsTimeAvailable() {
-            AvailableTimes availableTimes = new AvailableTimes("12-12-2016", "Monday");
+            AvailableTimes availableTimes = new AvailableTimes(DateTime.Now.Date.ToString(), DateTime.Now.DayOfWeek.ToString());
             availableTimes.Init();
 
             int length = 60;
