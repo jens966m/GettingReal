@@ -4,23 +4,22 @@ using System.Collections.Generic;
 namespace SourceCodeGettingReal {
     public class Menu {
         public UserFunctions userFunctions;
-        public static List<Haircutter> haircutters;
+        HairdresserFunctions hairDresserFunctions;
+        public static List<Hairdresser> hairdressers;
         
-
         public void Init() {
             //temp
-            haircutters = new List<Haircutter>();
-            Haircutter haircutter = new Haircutter("Louise");
-            haircutters.Add(haircutter);
-            
+            hairdressers = new List<Hairdresser>();
+            Hairdresser hairdresser = new Hairdresser("Louise");
+            hairdressers.Add(hairdresser);
+            hairDresserFunctions = new HairdresserFunctions();
+
             userFunctions = new UserFunctions();
             userFunctions.Init();
         }
 
         public void MainMenu() {
-            Console.WriteLine("MENU:");
-            Console.WriteLine("tryk '1' hvis du er en kunde");
-            Console.WriteLine("tryk '2' hvis du er frisør");
+            MainMenuText();
             ConsoleKeyInfo cki;
             do {
                 cki = Console.ReadKey(false);
@@ -32,24 +31,21 @@ namespace SourceCodeGettingReal {
 
                     case "2":
                         Console.Clear();
-                        HaircutterMenu();
+                        HairdresserMenu();
                         MainMenu();
                         break;
 
                     default:
-                        Console.Clear();
-                        Console.WriteLine("MENU:");
-                        Console.WriteLine("tryk '1' for kunde");
-                        Console.WriteLine("tryk '2' for frisør");
-                        Console.WriteLine("Forkert input");
-                        userFunctions.DatabaseUpdate();
-                        Console.WriteLine();
+                        MainMenuText();
+                        WrongInput();
                         break;
                 }
             } while (cki.Key != ConsoleKey.Escape);
-            userFunctions.DatabaseUpdate();
+            DBCon dbcon = new DBCon();
+            dbcon.DatabaseUpdate();
             Environment.Exit(1);
         }
+
         public void UserMenu(Customer tempcurrentcustomer = null) {
             ConsoleKeyInfo cki;
             Customer currentCustomer;
@@ -62,11 +58,7 @@ namespace SourceCodeGettingReal {
                 MainMenu();
             }
 
-            Console.WriteLine("Du er logget på som: " + currentCustomer.Name + ' ' + currentCustomer.LastName);
-            Console.WriteLine("Tryk '1' hvis du ønsker at oprette en ny tid");
-            Console.WriteLine("Tryk '2' hvis du ønsker at se liste over dine tider");
-            Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden");
-            Console.WriteLine("Tryk '4' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+            UserMenuText(currentCustomer);
             cki = Console.ReadKey(false);
             switch (cki.KeyChar.ToString()) {
                 case "1":
@@ -93,56 +85,30 @@ namespace SourceCodeGettingReal {
 
                 default:
                     Console.WriteLine();
-                    Console.Clear();
-                    Console.WriteLine("Forkert input");
-                    Console.WriteLine();
+                    WrongInput();
                     MainMenu();
                     break;
             }
         }
-        public void HaircutterMenu() {
+
+        public void HairdresserMenu() {
             ConsoleKeyInfo cki;
-            Console.WriteLine("Du er logget på som: Frisør");
-            Console.WriteLine("Tryk '1' hvis du ønsker at se liste over kunder");
-            Console.WriteLine("Tryk '2' hvis du ønsker at se næste kunde og deres tid");
-            Console.WriteLine("Tryk '3' hvis du ønsker at se om du har ledige tider idag");
-            Console.WriteLine("Tryk '4' hvis du ønsker at logge på som en anden (TBD)");
-            Console.WriteLine("Tryk '5' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
             cki = Console.ReadKey(false);
+            HairdresserMenuText();
             switch (cki.KeyChar.ToString()) {
                 case "1":
                     Console.Clear();
-                    userFunctions.ListCustomers();
-                    HaircutterMenu();
+                    hairDresserFunctions.ListCustomers();
+                    HairdresserMenu();
                     break;
                 case "2":
-                    Console.Clear();
-                    //asuming signed in as Louise
-                    DateTime nextTime = haircutters.Find(x => x.Name == "Louise").NextTime();
-                    Customer foundCustomer = userFunctions.FindCustomerByTime(nextTime, "Louise");
-                    userFunctions.PrintCustomer(foundCustomer);
-                    Console.WriteLine();
-                    HaircutterMenu();
+                    ShowNextCustomer();
+                    HairdresserMenu();
                     break;
 
                 case "3":
-                    Console.Clear();
-                    List<AvailableTimes> tempDates = userFunctions.getAvailableTimes();
-                    AvailableTimes Today = tempDates.Find(x => x.Date == DateTime.Now.Date.ToString());
-                    string[] tempTimes = Today.ShowTimes().Split(' ');
-                    if (tempTimes.Length > 1) {
-                        Console.WriteLine("Du har ledig tid: ");
-                        for (int i = 0; i < tempTimes.Length; i += 2) {
-                            Console.WriteLine("Fra: " + tempTimes[i] + " Til: " + tempTimes[i + 1]);
-                            if (i+2 != tempTimes.Length) {
-                                Console.WriteLine("&");
-                            }
-                        }
-                    } else {
-                        Console.WriteLine("Du har ingen ledige tider.");
-                    }
-                    Console.WriteLine();
-                    HaircutterMenu();
+                    ShowAvailebleTimesForToday();
+                    HairdresserMenu();
                     break;
 
                 case "5":
@@ -152,12 +118,68 @@ namespace SourceCodeGettingReal {
 
                 default:
                     Console.WriteLine();
-                    Console.Clear();
-                    Console.WriteLine("Forkert input");
-                    Console.WriteLine();
-                    HaircutterMenu();
+                    WrongInput();
+                    HairdresserMenu();
                     break;
             }        
+        }
+
+        public void ShowNextCustomer() {
+            Console.Clear();
+            //asuming signed in as Louise
+            DateTime nextTime = hairdressers.Find(x => x.Name == "Louise").NextTime();
+            Customer foundCustomer = hairDresserFunctions.FindCustomerByTime(nextTime, "Louise");
+            hairDresserFunctions.PrintCustomer(foundCustomer);
+            Console.WriteLine();
+        }
+
+        public void ShowAvailebleTimesForToday() {
+            Console.Clear();
+            List<AvailableTimes> tempDates = hairDresserFunctions.getAvailableTimes();
+            AvailableTimes Today = tempDates.Find(x => x.Date == DateTime.Now.Date.ToString());
+            string[] tempTimes = Today.ShowTimes().Split(' ');
+
+            if (tempTimes.Length > 1) {
+                Console.WriteLine("Du har ledig tid: ");
+                for (int i = 0; i < tempTimes.Length; i += 2) {
+                    Console.WriteLine("Fra: " + tempTimes[i] + " Til: " + tempTimes[i + 1]);
+                    if (i + 2 != tempTimes.Length) {
+                        Console.WriteLine("&");
+                    }
+                }
+            } else {
+                Console.WriteLine("Du har ingen ledige tider.");
+            }
+            Console.WriteLine();
+        }
+
+        public void MainMenuText() {
+            Console.WriteLine("MENU:");
+            Console.WriteLine("tryk '1' for kunde");
+            Console.WriteLine("tryk '2' for frisør");
+        }
+
+        public void UserMenuText(Customer currentCustomer) {
+            Console.WriteLine("Du er logget på som: " + currentCustomer.Name + ' ' + currentCustomer.LastName);
+            Console.WriteLine("Tryk '1' hvis du ønsker at oprette en ny tid");
+            Console.WriteLine("Tryk '2' hvis du ønsker at se liste over dine tider");
+            Console.WriteLine("Tryk '3' hvis du ønsker at logge på som en anden");
+            Console.WriteLine("Tryk '4' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+        }
+
+        public void HairdresserMenuText() {
+            Console.WriteLine("Du er logget på som: Frisør");
+            Console.WriteLine("Tryk '1' hvis du ønsker at se liste over kunder");
+            Console.WriteLine("Tryk '2' hvis du ønsker at se næste kunde og deres tid");
+            Console.WriteLine("Tryk '3' hvis du ønsker at se om du har ledige tider idag");
+            Console.WriteLine("Tryk '4' hvis du ønsker at logge på som en anden (TBD)");
+            Console.WriteLine("Tryk '5' hvis du ønsker at logge ud og vende tilbage til hovedmenu'en");
+        }
+
+        public void WrongInput() {
+            Console.Clear();
+            Console.WriteLine("Forkert input");
+            Console.WriteLine();
         }
     }
 }

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 
 namespace SourceCodeGettingReal {
-    public class Haircutter {
+    public class Hairdresser {
         public List<DateTime> Times = new List<DateTime>();
         public string Name;
 
-        public Haircutter(string name) {
+        public Hairdresser(string name) {
             Name = name;
         }
 
