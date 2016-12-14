@@ -47,12 +47,18 @@ namespace SourceCodeGettingReal {
         }
 
         public void UserMenu(Customer tempcurrentcustomer = null) {
+            ConsoleKeyInfo cki;
             Customer currentCustomer;
-            currentCustomer = IsNewUser(tempcurrentcustomer, currentCustomer);
-            Console.Clear();
+            currentCustomer = tempcurrentcustomer;
+            if (currentCustomer == null) {
+                currentCustomer = userFunctions.DoesUserExist();
+                Console.Clear();
+            }
+            if (currentCustomer == null) {
+                MainMenu();
+            }
 
             UserMenuText(currentCustomer);
-            ConsoleKeyInfo cki;
             cki = Console.ReadKey(false);
             switch (cki.KeyChar.ToString()) {
                 case "1":
@@ -116,16 +122,6 @@ namespace SourceCodeGettingReal {
                     HairdresserMenu();
                     break;
             }        
-        }
-        public Customer IsNewUser(Customer tempcurrentcustomer, Customer currentCustomer) {
-            currentCustomer = tempcurrentcustomer;
-            if (currentCustomer == null) {
-                return userFunctions.DoesUserExist();
-            }
-            if (currentCustomer == null) {
-                MainMenu();
-            }
-            return null;
         }
 
         public void ShowNextCustomer() {
