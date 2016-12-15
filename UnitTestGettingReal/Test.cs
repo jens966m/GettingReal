@@ -1,25 +1,44 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SourceCodeGettingReal;
 
 namespace UnitTestGettingReal {
     [TestClass]
     public class Test {
         UserFunctions userFunctions;
+        Menu menu;
+        HairdresserFunctions hairDresserFunctions;
         Customer customer1;
         Customer customer2;
         Customer customer3;
+
+        Hairdresser hairdresser1;
+        Hairdresser hairdresser2;
 
         [TestInitialize]
         public void SetupTest() {
             userFunctions = new UserFunctions();
             userFunctions.Init();
+            hairDresserFunctions = new HairdresserFunctions();
+
+            menu = new Menu();
+            menu.Init();
+
             customer1 = new Customer(11111111);
             customer2 = new Customer(22222222);
             customer3 = new Customer(33333333);
-            userFunctions.customers.Add(customer1);
-            userFunctions.customers.Add(customer2);
-            userFunctions.customers.Add(customer3);
+            UserFunctions.customers.Add(customer1);
+            UserFunctions.customers.Add(customer2);
+            UserFunctions.customers.Add(customer3);
+
+            hairdresser1 = new Hairdresser("Louise");
+            hairdresser2 = new Hairdresser("Jesper");
+            Menu.hairdressers.Add(hairdresser1);
+            Menu.hairdressers.Add(hairdresser2);
+
+
         }
+        //Customer
         [TestMethod]
         public void CustomerHaveAName() {
             customer1.Name = "Jens";
@@ -31,15 +50,15 @@ namespace UnitTestGettingReal {
         }
         [TestMethod]
         public void ACustomerCanChooseATime() {
-           
-            customer2.BookATime("12", "12", "2016", "12", "00");
+            //test
+            customer2.BookATime("12", "12", "2016", "12", "00", "00");
 
-            Assert.AreEqual("2016-12-12 12:00:00", customer2.Times[0].ToString());
+            Assert.AreEqual("12-12-2016 12:00:00", customer2.Times[0].ToString());
         }
         [TestMethod]
         public void FindCustomerByPhone() {
             customer3.Name = "Peter";
-            Assert.AreEqual(userFunctions.FindCustomerByPhone(33333333), customer3);
+            Assert.AreEqual(UserFunctions.FindCustomerByPhone(33333333), customer3);
         }
         [TestMethod]
         public void ShowListOfCusomers() {
@@ -50,7 +69,46 @@ namespace UnitTestGettingReal {
             customer3.Name = "Rut";
             customer3.LastName = "Rutsen";
 
-            userFunctions.ListCustomers();
+            hairDresserFunctions.ListCustomers();
+        }
+
+        //AvailableTimes
+        [TestMethod]
+        public void IsTimeAvailable() {
+            AvailableTimes availableTimes = new AvailableTimes(DateTime.Now.Date.ToString(), DateTime.Now.DayOfWeek.ToString());
+            availableTimes.Init();
+
+            int length = 60;
+            string beginTime = "09:00";
+            availableTimes.BookTime(beginTime, length);
+            for (int i = 0; i < length; i++) {
+                Assert.AreEqual(false, availableTimes.Available[i]);
+            }
+        }
+
+        //HAIRDRESSER
+        [TestMethod]
+        public void HairdresserHasAName() {
+            Assert.AreEqual(hairdresser1.Name, "Louise");
+        }
+        [TestMethod]
+        public void AHairdresserCanFindNextTime() {
+            hairdresser1.Times.Add(new DateTime(2016, 12, 12, 20, 00, 00));
+            hairdresser1.Times.Add(new DateTime(2016, 12, 12, 18, 00, 00));
+            hairdresser1.Times.Add(new DateTime(2016, 12, 13, 18, 00, 00));
+            hairdresser1.Times.Add(new DateTime(2016, 12, 17, 17, 00, 00));
+            hairdresser1.Times.Add(new DateTime(2016, 12, 24, 01, 00, 00));
+            
+            Assert.AreEqual("12-12-2016 18:00:00", hairdresser1.NextTime().ToString());
+        }
+        [TestMethod]
+        public void FindCustomerByTime() {
+            hairdresser1.Times.Add(new DateTime(2016, 12, 12, 18, 00, 00));
+            customer1.Times.Add(new DateTime(2016, 12, 12, 17, 00, 00));
+            customer2.Times.Add(new DateTime(2016, 12, 12, 20, 00, 00));
+            customer2.Times.Add(new DateTime(2016, 12, 12, 18, 00, 00));
+            DateTime nextTime = hairdresser1.NextTime();
+            Assert.AreEqual(hairDresserFunctions.FindCustomerByTime(nextTime, "Louise"), customer2);
         }
 
         //SERVICE
